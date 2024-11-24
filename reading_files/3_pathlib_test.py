@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 
+
 caminho = Path('primeira_pasta/segunda_pasta')
 
 for nome in ['arch1.txt', 'arch2.txt', 'arch2.txt']:
