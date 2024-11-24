@@ -11,7 +11,7 @@ def dir_size(filepath, depth=1, line_size=0):
                     size += os.path.getsize(file)
             print('--' * line_size, directory.name,
                   round(size / 1024 / 1024, 2), 'mb')
-            if (depth > 1):
+            if depth > 1:
                 dir_size(directory, depth-1, line_size+1)
 
 
