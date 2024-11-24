@@ -1,0 +1,7 @@
+setup.py
+TestVenv.egg-info/PKG-INFO
+TestVenv.egg-info/SOURCES.txt
+TestVenv.egg-info/dependency_links.txt
+TestVenv.egg-info/top_level.txt
+meu_pacote/__init__.py
+meu_pacote/meu_codigo.py
