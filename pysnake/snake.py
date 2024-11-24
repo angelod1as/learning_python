@@ -7,9 +7,6 @@ def game_loop(window, game_speed):
     # Setup inicial
     curses.curs_set(0)
     snake = [
-        [12, 15],
-        [11, 15],
-        [10, 15],
         [9, 15],
         [8, 15],
         [7, 15],
