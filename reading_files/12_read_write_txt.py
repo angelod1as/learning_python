@@ -25,7 +25,7 @@ with open(curr_folder/'shopping_list.txt') as shopping_list:
         print(line, end='')
         line = shopping_list.readline()
 
-All lines
+# All lines
 curr_folder = Path(__file__).parent
 
 with open(curr_folder/'shopping_list.txt') as shopping_list:
