@@ -38,3 +38,5 @@ from openpyxl.drawing.image import Image
 
 img = Image("catlogo.png")
 sheet.add_image(img, "A1")
+
+wb.save("exemplo.xlsx")
