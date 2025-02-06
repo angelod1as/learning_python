@@ -1,5 +1,5 @@
-from pathlib import Path
 import pandas as pd
+from pathlib import Path
 
 
 def carregar_tabelas(
@@ -7,7 +7,7 @@ def carregar_tabelas(
     pasta_dados,
     arquivo_excel,
 ):
-    caminho_dados = Path(pasta_dados / arquivo_excel)
+    caminho_dados = Path(pasta_dados) / arquivo_excel
     dados_brutos = pd.read_excel(caminho_dados)
     dados_filtrados = filtrar_dados_pelo_mes(
         dados_brutos=dados_brutos, mes_referencia=mes_referencia
@@ -16,20 +16,22 @@ def carregar_tabelas(
     tabela_volume = gerar_volume_de_vendas(dados=dados_filtrados)
     tabela_ticket_medio = gerar_ticket_medio(dados=dados_filtrados)
     return {
-        tabela_vendas: tabela_vendas,
-        tabela_volume: tabela_volume,
-        tabela_ticket_medio: tabela_ticket_medio,
+        "tabela_vendas": tabela_vendas,
+        "tabela_volume": tabela_volume,
+        "tabela_tm": tabela_ticket_medio,
     }
 
 
 def filtrar_dados_pelo_mes(dados_brutos, mes_referencia, coluna_data_hora="Data/Hora"):
-    filtro = dados_brutos[coluna_data_hora].apply(
-        lambda dt: dt.strftime("%Y-%m") == mes_referencia
+    filtro = (
+        dados_brutos[coluna_data_hora].apply(lambda dt: dt.strftime("%Y-%m"))
+        == mes_referencia
     )
     dados_filtrados = dados_brutos.loc[filtro]
     if dados_filtrados.empty:
         raise ValueError(
-            f"Nenhum dado encontrado para o mês {mes_referencia}. Confirme se o mês de referência está no formato YYYY-MM"
+            f"Nenhum dado encontrado para o mẽs {mes_referencia} Confirme se o mẽs de referência "
+            "está no formato YYYY-MM, e se há dados para este mês."
         )
     return dados_filtrados
 
@@ -37,13 +39,13 @@ def filtrar_dados_pelo_mes(dados_brutos, mes_referencia, coluna_data_hora="Data/
 def gerar_numero_de_vendas(
     dados,
     coluna_vendedor="Vendedor",
-    coluna_Produto="Produto",
-    coluna_Quantidade="Quantidade",
+    coluna_produto="Produto",
+    coluna_quantidade="Quantidade",
 ):
     return dados.pivot_table(
         index=coluna_vendedor,
-        columns=coluna_Produto,
-        values=coluna_Quantidade,
+        columns=coluna_produto,
+        values=coluna_quantidade,
         aggfunc="sum",
         margins=True,
         margins_name="TOTAL",
@@ -53,18 +55,26 @@ def gerar_numero_de_vendas(
 def gerar_volume_de_vendas(
     dados,
     coluna_vendedor="Vendedor",
-    coluna_Produto="Produto",
+    coluna_produto="Produto",
     coluna_volume="Valor Venda",
 ):
-    return dados.pivot_table(
-        index=coluna_vendedor,
-        columns=coluna_Produto,
-        values=coluna_volume,
-        aggfunc="sum",
-        margins=True,
-        margins_name="TOTAL",
-    ).sort_values(by="TOTAL")
+    return (
+        dados.pivot_table(
+            index=coluna_vendedor,
+            columns=coluna_produto,
+            values=coluna_volume,
+            aggfunc="sum",
+            margins=True,
+            margins_name="TOTAL",
+        )
+        .sort_values(by="TOTAL")
+        .astype(float)
+    )
 
 
-def gerar_ticket_medio(dados, coluna_vendedor="Vendedor", coluna_volume="Valor Venda"):
+def gerar_ticket_medio(
+    dados,
+    coluna_vendedor="Vendedor",
+    coluna_volume="Valor Venda",
+):
     return dados.groupby(coluna_vendedor)[[coluna_volume]].mean()
